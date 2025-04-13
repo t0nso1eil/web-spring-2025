@@ -4,6 +4,7 @@ from decimal import Decimal
 from sqlmodel import SQLModel, Field, Relationship
 
 class Goal(SQLModel, table=True):
+    __tablename__ = "goal"
     id: Optional[int] = Field(default=None, primary_key=True)
     user_id: int = Field(foreign_key="user.id")
     title: str

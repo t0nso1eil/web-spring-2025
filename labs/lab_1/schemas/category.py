@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlmodel import SQLModel
 
 
@@ -13,3 +15,7 @@ class CategoryRead(CategoryBase):
 
     class Config:
         orm_mode = True
+
+class CategoryUpdate(SQLModel):
+    name: Optional[str] = None
+    is_income: Optional[bool] = None

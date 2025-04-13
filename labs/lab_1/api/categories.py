@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from connection import get_session
 from models.category import Category
-from schemas.category import CategoryRead, CategoryCreate
+from schemas.category import CategoryRead, CategoryCreate, CategoryUpdate
 
 router = APIRouter()
 
@@ -24,6 +24,26 @@ def get_category(category_id: int, db: Session = Depends(get_session)):
     cat = db.get(Category, category_id)
     if not cat:
         raise HTTPException(status_code=404, detail="Not found")
+    return cat
+
+@router.put("/categories/{category_id}", response_model=CategoryRead)
+def update_category(
+    category_id: int,
+    cat_update: CategoryUpdate,
+    db: Session = Depends(get_session)
+):
+    cat = db.get(Category, category_id)
+    if not cat:
+        raise HTTPException(status_code=404, detail="Category not found")
+
+    if cat_update.name:
+        cat.name = cat_update.name
+
+    if cat_update.is_income:
+        cat.income = cat_update.income
+
+    db.commit()
+    db.refresh(cat)
     return cat
 
 @router.delete("/categories/{category_id}")
